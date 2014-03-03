@@ -78,7 +78,7 @@ namespace Mazey
             return cells[RowToIndex(row, Direction.None), ColToIndex(col, Direction.None)];
         }
 
-        private bool IsInMaze(int row, int col)
+        public bool IsInMaze(int row, int col)
         {
             return (row >= 0 && row < Rows) &&
                    (col >= 0 && col < Cols);

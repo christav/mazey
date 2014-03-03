@@ -52,13 +52,13 @@ namespace Mazey
                 switch (direction)
                 {
                     case Direction.Up:
-                        return isSolutionCell(maze, row - 1, col);
+                        return maze.IsInMaze(row - 1, col) && isSolutionCell(maze, row - 1, col);
                     case Direction.Left:
-                        return isSolutionCell(maze, row, col - 1);
+                        return maze.IsInMaze(row, col - 1) && isSolutionCell(maze, row, col - 1);
                     case Direction.Down:
-                        return isSolutionCell(maze, row + 1, col);
+                        return maze.IsInMaze(row + 1, col) && isSolutionCell(maze, row + 1, col);
                     case Direction.Right:
-                        return isSolutionCell(maze, row, col + 1);
+                        return maze.IsInMaze(row, col + 1) && isSolutionCell(maze, row, col + 1);
                 }
             }
             return false;
