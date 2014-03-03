@@ -28,7 +28,16 @@ namespace Mazey
             }
         }
 
-        public IEnumerable<Maze> MakeMaze()
+        public Maze MakeMaze()
+        {
+            foreach (var m in MakeMazeByStep())
+            {
+                
+            }
+            return maze;
+        }
+
+        public IEnumerable<Maze> MakeMazeByStep()
         {
             Tuple<int, int> cell = Tuple.Create(rng.Next(maze.Rows), rng.Next(maze.Cols));
 

@@ -8,9 +8,9 @@ namespace Mazey
     {
         static void Main(string[] args)
         {
-            var maze = new Maze(35, 20);
+            var maze = new Maze(20, 40);
             var maker = new MazeMaker(maze);
-            maker.MakeMaze().Count();
+            maker.MakeMaze();
             var solver = new MazeSolver(maze);
             solver.Solve();
             PrintMaze(Console.Out, maze, MazeSolver.IsSolutionCell);
