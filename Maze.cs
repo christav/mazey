@@ -39,12 +39,31 @@ namespace Mazey
             }
         }
 
+        public int EntranceRow
+        {
+            get { return Entrance.Item1; }
+        }
+
+        public int EntranceCol
+        {
+            get { return Entrance.Item2; }
+        }
         public Tuple<int, int> Exit
         {
             get
             {
                 return Tuple.Create(Enumerable.Range(0, Rows).First(r => CanGo(r, Cols - 1, Direction.Right)), Cols - 1);
             }
+        }
+
+        public int ExitRow
+        {
+            get { return Exit.Item1; }
+        }
+
+        public int ExitCol
+        {
+            get { return Exit.Item2; }
         }
 
         public bool CanGo(int row, int col, Direction direction)
