@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Mazey
@@ -98,6 +99,14 @@ namespace Mazey
 
             return (row >= 0 && row < Rows) &&
                    (col >= 0 && col < Cols);
+        }
+
+        public IEnumerable<Direction> Directions()
+        {
+            yield return Direction.Up;
+            yield return Direction.Left;
+            yield return Direction.Down;
+            yield return Direction.Right;
         }
 
         public void AllCells(Action<int, int> perCellAction)
