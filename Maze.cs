@@ -83,12 +83,12 @@ namespace Mazey
 
         public void Mark(int row, int col, int mark, Direction direction = Direction.None)
         {
-            cells[RowToIndex(row, direction), ColToIndex(col, direction)] = mark;
+            cells[RowToIndex(RowOffset(row, direction), Direction.None), ColToIndex(ColOffset(col, direction), Direction.None)] = mark;
         }
 
         public int GetMark(int row, int col, Direction direction = Direction.None)
         {
-            return cells[RowToIndex(row, direction), ColToIndex(col, direction)];
+            return cells[RowToIndex(RowOffset(row, direction), Direction.None), ColToIndex(ColOffset(col, direction), Direction.None)];
         }
 
         public bool IsInMaze(int row, int col, Direction direction = Direction.None)
