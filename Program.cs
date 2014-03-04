@@ -8,7 +8,7 @@ namespace Mazey
     {
         static void Main(string[] args)
         {
-            var maze = new Maze(20, 40);
+            var maze = new Maze(20, 35);
             var maker = new MazeMaker(maze);
             maker.MakeMaze();
             var solver = new MazeSolver(maze);
