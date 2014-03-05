@@ -21,7 +21,7 @@ namespace Mazey
             return maze;
         }
 
-        public static bool IsSolutionCell(Maze m, int row, int col)
+        public static bool IsSolutionCell(Cell cell)
         {
             return false;
         }

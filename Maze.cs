@@ -6,6 +6,56 @@ namespace Mazey
 {
     public class Maze
     {
+        private class MazeCell : Cell
+        {
+            private int row;
+            private int col;
+            private Maze maze;
+
+            public MazeCell(Maze m, int row, int col)
+            {
+                this.maze = m;
+                this.row = row;
+                this.col = col;
+            }
+            public override int Row
+            {
+                get { return row; }
+            }
+
+            public override int Col
+            {
+                get { return col; }
+            }
+
+            public override bool CanGo(Direction d)
+            {
+                return maze.CanGo(row, col, d);
+            }
+
+            public override Cell Go(Direction d)
+            {
+                return new MazeCell(maze, Maze.RowOffset(row, d), Maze.ColOffset(col, d));
+            }
+
+            public override bool IsInMaze
+            {
+                get { return maze.IsInMaze(row, col); }
+            }
+
+            public override int Mark
+            {
+                get
+                {
+                    return maze.GetMark(row, col);
+                }
+                set
+                {
+                    maze.Mark(row, col, value);
+                }
+            }
+        }
+
         private int[,] cells;
 
         public int Cols { get; private set; }
@@ -23,45 +73,31 @@ namespace Mazey
                     cells[r, c] = 1;
                 }
             }
-            this.AllCells((r, c) => Mark(r, c, 0));
+            this.AllCells(cell => cell.Mark = 0);
         }
 
-        public Tuple<int, int> Entrance
+        public Cell Entrance
         {
             get
             {
-                return Tuple.Create(Enumerable.Range(0, Rows).First(r => CanGo(r, 0, Direction.Left)), 0);
+                return new MazeCell(this, Enumerable.Range(0, Rows).First(r => CanGo(r, 0, Direction.Left)), 0);
             }
         }
 
-        public int EntranceRow
-        {
-            get { return Entrance.Item1; }
-        }
-
-        public int EntranceCol
-        {
-            get { return Entrance.Item2; }
-        }
-        public Tuple<int, int> Exit
+        public Cell Exit
         {
             get
             {
-                return Tuple.Create(Enumerable.Range(0, Rows).First(r => CanGo(r, Cols - 1, Direction.Right)), Cols - 1);
+                return new MazeCell(this, Enumerable.Range(0, Rows).First(r => CanGo(r, Cols - 1, Direction.Right)), Cols - 1);
             }
         }
 
-        public int ExitRow
+        public Cell GetCell(int row, int col)
         {
-            get { return Exit.Item1; }
+            return new MazeCell(this, row, col);
         }
 
-        public int ExitCol
-        {
-            get { return Exit.Item2; }
-        }
-
-        public bool CanGo(int row, int col, Direction direction)
+        private bool CanGo(int row, int col, Direction direction)
         {
             int y = RowToIndex(row, direction);
             int x = ColToIndex(col, direction);
@@ -82,17 +118,17 @@ namespace Mazey
             cells[RowToIndex(row, direction), ColToIndex(col, direction)] = 1;
         }
 
-        public void Mark(int row, int col, int mark, Direction direction = Direction.None)
+        private void Mark(int row, int col, int mark, Direction direction = Direction.None)
         {
             cells[RowToIndex(RowOffset(row, direction), Direction.None), ColToIndex(ColOffset(col, direction), Direction.None)] = mark;
         }
 
-        public int GetMark(int row, int col, Direction direction = Direction.None)
+        private int GetMark(int row, int col, Direction direction = Direction.None)
         {
             return cells[RowToIndex(RowOffset(row, direction), Direction.None), ColToIndex(ColOffset(col, direction), Direction.None)];
         }
 
-        public bool IsInMaze(int row, int col, Direction direction = Direction.None)
+        private bool IsInMaze(int row, int col, Direction direction = Direction.None)
         {
             row = RowOffset(row, direction);
             col = ColOffset(col, direction);
@@ -101,7 +137,7 @@ namespace Mazey
                    (col >= 0 && col < Cols);
         }
 
-        public IEnumerable<Direction> Directions()
+        public static IEnumerable<Direction> Directions()
         {
             yield return Direction.Up;
             yield return Direction.Left;
@@ -109,13 +145,29 @@ namespace Mazey
             yield return Direction.Right;
         }
 
-        public void AllCells(Action<int, int> perCellAction)
+        public IEnumerable<IEnumerable<Cell>> AllRows()
+        {
+            for (int r = 0; r < Rows; ++r)
+            {
+                yield return CellsInRow(r);
+            }
+        }
+
+        public IEnumerable<Cell> CellsInRow(int r)
+        {
+            for (int c = 0; c < Cols; ++c)
+            {
+                yield return GetCell(r, c);
+            }
+        }
+
+        public void AllCells(Action<Cell> perCellAction)
         {
             for (int r = 0; r < Rows; ++r)
             {
                 for(int c = 0; c < Cols; ++c)
                 {
-                    perCellAction(r, c);
+                    perCellAction(new MazeCell(this, r, c));
                 }
             }
         }
@@ -161,7 +213,7 @@ namespace Mazey
             throw new Exception("Unknown direction");
         }
 
-        public static int RowOffset(int row, Direction direction)
+        private static int RowOffset(int row, Direction direction)
         {
             switch (direction)
             {
@@ -180,7 +232,7 @@ namespace Mazey
                     throw new Exception("Unknown direction");
             }
         }
-        public static int ColOffset(int col, Direction direction)
+        private static int ColOffset(int col, Direction direction)
         {
             switch (direction)
             {

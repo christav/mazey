@@ -16,28 +16,30 @@ namespace Mazey
             PrintMaze(Console.Out, maze, MazeSolver.IsSolutionCell);
         }
 
-        private static void PrintMaze(TextWriter output, Maze maze, Func<Maze, int, int, bool> isSolutionCell)
+        private static void PrintMaze(TextWriter output, Maze maze, Func<Cell, bool> isSolutionCell)
         {
-            for (int row = 0; row < maze.Rows; ++row)
+            foreach (var row in maze.AllRows())
             {
-                for (int col = 0; col < maze.Cols; ++col)
+                var currentRow = row.ToList();
+                foreach (var cell in currentRow)
                 {
                     output.Write('+');
-                    output.Write(maze.CanGo(row, col, Direction.Up) ? 
-                        IsSolutionPath(maze, row, col, Direction.Up, isSolutionCell) ? '*' : ' ' 
-                        : '-');
+                    output.Write(cell.CanGo(Direction.Up) ?
+                        IsSolutionPath(cell, Direction.Up, isSolutionCell) ? '*' : ' '
+                        : '-');                    
                 }
                 output.WriteLine('+');
 
-                for (int col = 0; col < maze.Cols; ++col)
+                foreach (var cell in currentRow)
                 {
-                    output.Write(maze.CanGo(row, col, Direction.Left) ? 
-                        IsSolutionPath(maze, row, col, Direction.Left, isSolutionCell) ? '*' : ' '
+                    output.Write(cell.CanGo(Direction.Left) ?
+                        IsSolutionPath(cell, Direction.Left, isSolutionCell) ? '*' : ' '
                         : '|');
-                    output.Write(isSolutionCell(maze, row, col) ? '*' : ' ');
+                    output.Write(isSolutionCell(cell) ? '*' : ' ');
                 }
-                output.WriteLine(maze.CanGo(row, maze.Cols - 1, Direction.Right) ? ' ' : '|');
+                output.WriteLine(currentRow[currentRow.Count - 1].CanGo(Direction.Right) ? ' ' : '|');
             }
+            
             for (int col = 0; col < maze.Cols; ++col)
             {
                 output.Write("+-");
@@ -45,11 +47,11 @@ namespace Mazey
             output.WriteLine("+");
         }
 
-        private static bool IsSolutionPath(Maze maze, int row, int col, Direction direction, Func<Maze, int, int, bool> isSolutionCell)
+        private static bool IsSolutionPath(Cell cell, Direction direction, Func<Cell, bool> isSolutionCell)
         {
-            if (isSolutionCell(maze, row, col))
+            if (isSolutionCell(cell))
             {
-                return maze.IsInMaze(row, col, direction) && isSolutionCell(maze, Maze.RowOffset(row, direction), Maze.ColOffset(col, direction));
+                return cell.Go(direction).IsInMaze && isSolutionCell(cell.Go(direction));
             }
             return false;
         }
