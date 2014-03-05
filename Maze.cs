@@ -89,7 +89,10 @@ namespace Mazey
                     cells[r, c] = 1;
                 }
             }
-            this.AllCells(cell => cell.Mark = 0);
+            foreach (var cell in this.AllCells())
+            {
+                cell.Mark = 0;
+            }
         }
 
         public Cell Entrance
@@ -105,6 +108,32 @@ namespace Mazey
             get
             {
                 return new MazeCell(this, Enumerable.Range(0, Rows).First(r => CanGo(r, Cols - 1, Direction.Right)), Cols - 1);
+            }
+        }
+        public IEnumerable<IEnumerable<Cell>> AllRows()
+        {
+            for (int r = 0; r < Rows; ++r)
+            {
+                yield return CellsInRow(r);
+            }
+        }
+
+        public IEnumerable<Cell> CellsInRow(int r)
+        {
+            for (int c = 0; c < Cols; ++c)
+            {
+                yield return GetCell(r, c);
+            }
+        }
+
+        public IEnumerable<Cell> AllCells()
+        {
+            foreach (var row in AllRows())
+            {
+                foreach (var cell in row)
+                {
+                    yield return cell;
+                }
             }
         }
 
@@ -159,33 +188,6 @@ namespace Mazey
             yield return Direction.Left;
             yield return Direction.Down;
             yield return Direction.Right;
-        }
-
-        public IEnumerable<IEnumerable<Cell>> AllRows()
-        {
-            for (int r = 0; r < Rows; ++r)
-            {
-                yield return CellsInRow(r);
-            }
-        }
-
-        public IEnumerable<Cell> CellsInRow(int r)
-        {
-            for (int c = 0; c < Cols; ++c)
-            {
-                yield return GetCell(r, c);
-            }
-        }
-
-        public void AllCells(Action<Cell> perCellAction)
-        {
-            for (int r = 0; r < Rows; ++r)
-            {
-                for(int c = 0; c < Cols; ++c)
-                {
-                    perCellAction(new MazeCell(this, r, c));
-                }
-            }
         }
 
         private int RowToIndex(int row, Direction direction)

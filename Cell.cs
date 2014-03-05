@@ -25,7 +25,7 @@ namespace Mazey
             {
                 foreach (Direction d in Maze.Directions())
                 {
-                    if (CanGo(d))
+                    if (CanGo(d) && Go(d).IsInMaze)
                     {
                         yield return Go(d);
                     }
