@@ -54,6 +54,22 @@ namespace Mazey
                     maze.Mark(row, col, value);
                 }
             }
+
+            public override bool IsEntrance
+            {
+                get { 
+                    var entrance = maze.Entrance;
+                    return row == entrance.Row && col == entrance.Col;
+                }
+            }
+
+            public override bool IsExit
+            {
+                get {
+                    var exit = maze.Exit;
+                    return row == exit.Row && col == exit.Col;
+                }
+            }
         }
 
         private int[,] cells;

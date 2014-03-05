@@ -16,6 +16,9 @@ namespace Mazey
 
         public abstract int Mark { get; set; }
 
+        public abstract bool IsEntrance { get; }
+
+        public abstract bool IsExit { get; }
         public IEnumerable<Cell> Neighbors
         {
             get
