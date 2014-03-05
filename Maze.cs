@@ -89,10 +89,7 @@ namespace Mazey
                     cells[r, c] = 1;
                 }
             }
-            foreach (var cell in this.AllCells())
-            {
-                cell.Mark = 0;
-            }
+            AllCells().ForEach(c => c.Mark = 0);
         }
 
         public Cell Entrance

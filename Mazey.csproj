@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Cell.cs" />
     <Compile Include="Direction.cs" />
+    <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Maze.cs" />
     <Compile Include="MazeMaker.cs" />
     <Compile Include="MazeSolver.cs" />
