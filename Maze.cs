@@ -148,16 +148,16 @@ namespace Mazey
                    cells[y, x] == 0;
         }
 
-        public void OpenWall(int row, int col, Direction direction)
+        public void OpenWall(Cell cell, Direction direction)
         {
-            int y = RowToIndex(row, direction);
-            int x = ColToIndex(col, direction);
+            int y = RowToIndex(cell.Row, direction);
+            int x = ColToIndex(cell.Col, direction);
             cells[y, x] = 0;
         }
 
-        public void CloseWall(int row, int col, Direction direction)
+        public void CloseWall(Cell cell, Direction direction)
         {
-            cells[RowToIndex(row, direction), ColToIndex(col, direction)] = 1;
+            cells[RowToIndex(cell.Row, direction), ColToIndex(cell.Col, direction)] = 1;
         }
 
         private void Mark(int row, int col, int mark, Direction direction = Direction.None)
