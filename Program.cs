@@ -18,33 +18,48 @@ namespace Mazey
 
         private static void PrintMaze(TextWriter output, Maze maze, Func<Cell, bool> isSolutionCell)
         {
+            bool firstRow = true;
             foreach (var row in maze.AllRows())
             {
                 var currentRow = row.ToList();
+                var firstCol = true;
                 foreach (var cell in currentRow)
                 {
-                    output.Write("+");
+                    if (firstRow)
+                    {
+                        output.Write(firstCol ? "\u250c" : "\u252c");
+                    }
+                    else
+                    {
+                        output.Write(firstCol ? "\u251c" : "\u253c");
+                    }
                     output.Write(cell.CanGo(Direction.Up) ?
                         IsSolutionPath(cell, Direction.Up, isSolutionCell) ? "XXX" : "   "
-                        : "---");
+                        : "\u2500\u2500\u2500");
+                    firstCol = false;
                 }
-                output.WriteLine("+");
+                output.WriteLine(firstRow ? "\u2510" :"\u2524");
 
+                firstCol = true;
                 foreach (var cell in currentRow)
                 {
                     output.Write(cell.CanGo(Direction.Left) ?
                         IsSolutionPath(cell, Direction.Left, isSolutionCell) ? "X" : " "
-                        : "|");
+                        : firstCol ? "\u2502" : "\u2502");
                     output.Write(isSolutionCell(cell) ? "XXX" : "   ");
+                    firstCol = false;
                 }
-                output.WriteLine(currentRow[currentRow.Count - 1].CanGo(Direction.Right) ? " " : "|");
+                output.WriteLine(currentRow[currentRow.Count - 1].CanGo(Direction.Right) ? " " : "\u2502");
+                firstRow = false;
             }
-            
-            for (int col = 0; col < maze.Cols; ++col)
+
+            output.Write("\u2514\u2500\u2500\u2500");
+
+            for (int col = 1; col < maze.Cols; ++col)
             {
-                output.Write("+---");
+                output.Write("\u2534\u2500\u2500\u2500");
             }
-            output.WriteLine("+");
+            output.WriteLine("\u2518");
         }
 
         private static bool IsSolutionPath(Cell cell, Direction direction, Func<Cell, bool> isSolutionCell)
