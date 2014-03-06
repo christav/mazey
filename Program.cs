@@ -8,7 +8,7 @@ namespace Mazey
     {
         static void Main(string[] args)
         {
-            var maze = new Maze(20, 35);
+            var maze = new Maze(20, 20);
             var maker = new MazeMaker(maze);
             maker.MakeMaze();
             var solver = new MazeSolver(maze);
@@ -23,26 +23,26 @@ namespace Mazey
                 var currentRow = row.ToList();
                 foreach (var cell in currentRow)
                 {
-                    output.Write('+');
+                    output.Write("+");
                     output.Write(cell.CanGo(Direction.Up) ?
-                        IsSolutionPath(cell, Direction.Up, isSolutionCell) ? '*' : ' '
-                        : '-');                    
+                        IsSolutionPath(cell, Direction.Up, isSolutionCell) ? "***" : "   "
+                        : "---");
                 }
-                output.WriteLine('+');
+                output.WriteLine("+");
 
                 foreach (var cell in currentRow)
                 {
                     output.Write(cell.CanGo(Direction.Left) ?
-                        IsSolutionPath(cell, Direction.Left, isSolutionCell) ? '*' : ' '
-                        : '|');
-                    output.Write(isSolutionCell(cell) ? '*' : ' ');
+                        IsSolutionPath(cell, Direction.Left, isSolutionCell) ? "*" : " "
+                        : "|");
+                    output.Write(isSolutionCell(cell) ? "***" : "   ");
                 }
-                output.WriteLine(currentRow[currentRow.Count - 1].CanGo(Direction.Right) ? ' ' : '|');
+                output.WriteLine(currentRow[currentRow.Count - 1].CanGo(Direction.Right) ? " " : "|");
             }
             
             for (int col = 0; col < maze.Cols; ++col)
             {
-                output.Write("+-");
+                output.Write("+---");
             }
             output.WriteLine("+");
         }
