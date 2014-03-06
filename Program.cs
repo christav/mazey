@@ -33,7 +33,7 @@ namespace Mazey
                 foreach (var cell in currentRow)
                 {
                     output.Write(cell.CanGo(Direction.Left) ?
-                        IsSolutionPath(cell, Direction.Left, isSolutionCell) ? "Xs" : " "
+                        IsSolutionPath(cell, Direction.Left, isSolutionCell) ? "X" : " "
                         : "|");
                     output.Write(isSolutionCell(cell) ? "XXX" : "   ");
                 }
