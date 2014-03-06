@@ -25,7 +25,7 @@ namespace Mazey
                 {
                     output.Write("+");
                     output.Write(cell.CanGo(Direction.Up) ?
-                        IsSolutionPath(cell, Direction.Up, isSolutionCell) ? "***" : "   "
+                        IsSolutionPath(cell, Direction.Up, isSolutionCell) ? "XXX" : "   "
                         : "---");
                 }
                 output.WriteLine("+");
@@ -33,9 +33,9 @@ namespace Mazey
                 foreach (var cell in currentRow)
                 {
                     output.Write(cell.CanGo(Direction.Left) ?
-                        IsSolutionPath(cell, Direction.Left, isSolutionCell) ? "*" : " "
+                        IsSolutionPath(cell, Direction.Left, isSolutionCell) ? "Xs" : " "
                         : "|");
-                    output.Write(isSolutionCell(cell) ? "***" : "   ");
+                    output.Write(isSolutionCell(cell) ? "XXX" : "   ");
                 }
                 output.WriteLine(currentRow[currentRow.Count - 1].CanGo(Direction.Right) ? " " : "|");
             }
