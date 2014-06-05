@@ -121,3 +121,7 @@ packages
 
 # Specification DLLs
 *.Specification.dll
+
+# Intellij Idea files
+.idea/
+out/
