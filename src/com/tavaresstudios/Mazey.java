@@ -13,21 +13,20 @@ public class Mazey {
 
     public Mazey() {
         this.maze = new Maze(20, 20);
-        isSolutionCell = new SolutionCellPredicate() {
-            @Override
-            public Boolean check(Cell cell) {
-                return false;
-            }
-        };
     }
 
     public void run() {
         MazeMaker maker = new MazeMaker(maze);
         maker.makeMaze();
-        printMaze(System.out);
+
+        MazeSolver solver = new MazeSolver(maze);
+        Maze solved = solver.solve();
+        this.isSolutionCell = solver.isSolutionPathPredicate();
+
+        printMaze(System.out, solved);
     }
 
-    private void printMaze(PrintStream out) {
+    private void printMaze(PrintStream out, Maze maze) {
         for (int row = 0; row < maze.getRows(); ++row) {
             for (int col = 0; col < maze.getCols(); ++col) {
                 Cell cell = maze.getCell(row, col);

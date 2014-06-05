@@ -1,7 +1,6 @@
 package com.tavaresstudios;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Represents the directions you can move in the maze.
