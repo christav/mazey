@@ -2,15 +2,7 @@ package com.tavaresstudios;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
-/**
- * Created with IntelliJ IDEA.
- * User: cct_000
- * Date: 6/4/14
- * Time: 9:18 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Maze {
     // Our set of cells - each cell in this array is representing
     // either a wall or a cell. For the walls, 1 = a wall, 0 = no wall,
@@ -257,7 +249,7 @@ public class Maze {
         public Collection<Cell> neighbors() {
             ArrayList<Cell> neighbors = new ArrayList<Cell>();
             for(Direction d: Direction.getAll()) {
-                if (canGo(d)) {
+                if (canGo(d) && go(d).isInMaze()) {
                     neighbors.add(go(d));
                 }
             }
