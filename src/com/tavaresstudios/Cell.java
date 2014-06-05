@@ -1,5 +1,7 @@
 package com.tavaresstudios;
 
+import java.util.Collection;
+
 /**
  * Representation of a single cell in the maze.
  */
@@ -66,5 +68,5 @@ public interface Cell {
      * from this cell.
      * @return iterable of cells.
      */
-    Iterable<Cell> neighbors();
+    Collection<Cell> neighbors();
 }

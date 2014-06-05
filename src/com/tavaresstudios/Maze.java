@@ -1,6 +1,7 @@
 package com.tavaresstudios;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -253,7 +254,7 @@ public class Maze {
         }
 
         @Override
-        public Iterable<Cell> neighbors() {
+        public Collection<Cell> neighbors() {
             ArrayList<Cell> neighbors = new ArrayList<Cell>();
             for(Direction d: Direction.getAll()) {
                 if (canGo(d)) {
