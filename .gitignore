@@ -119,5 +119,6 @@ packages
 # Mac development
 .DS_Store
 
-# Specification DLLs
-*.Specification.dll
+# IntelliJ Idea
+.idea
+out
