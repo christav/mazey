@@ -117,6 +117,22 @@ class Maze {
     return this.cells[row][col];
   }
 
+  entrance() {
+    for(let row of this.cells) {
+      if (row[0].isEntrance) {
+        return row[0];
+      }
+    }
+  }
+
+  exit() {
+    for(let row of this.cells) {
+      if(row[row.length - 1].isExit) {
+        return row[row.length - 1];
+      }
+    }
+  }
+  
   *allCells() {
     for(let row of this.cells) {
       for(let cell of row) {
