@@ -4,8 +4,8 @@ function solveMaze(maze) {
 
 }
 
-function isSolutionCell(maze) {
-
+function isSolutionCell(cell) {
+  return false;
 }
 
 module.exports = { solveMaze, isSolutionCell };
