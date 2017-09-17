@@ -14,7 +14,8 @@ namespace Mazey
             maker.MakeMaze();
             var solver = new MazeSolver(maze);
             solver.Solve();
-            MazePrinter.Print(Console.Out, maze, MazeSolver.IsSolutionCell);
+            var printer = new MazePrinter(Console.Out, new AsciiCharSet(), maze, MazeSolver.IsSolutionCell);
+            printer.Print();
         }
     }
 }

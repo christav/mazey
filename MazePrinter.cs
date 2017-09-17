@@ -1,44 +1,17 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mazey
 {
-    public class MazePrinter
+    public interface ICharSet
     {
-        TextWriter output;
-        Maze maze;
-        Func<Cell, bool> isSolutionCell;
+        char[] CornerChars { get; }
+        string[] SolutionChars { get; }
+    }
 
-        private MazePrinter(TextWriter output, Maze maze, Func<Cell, bool> isSolutionCell)
-        {
-            this.output = output;
-            this.maze = maze;
-            this.isSolutionCell = isSolutionCell;
-        }
-
-        public static void Print(TextWriter output, Maze maze, Func<Cell, bool> isSolutionCell)
-        {
-            var printer = new MazePrinter(output, maze, isSolutionCell);
-            printer.Print();
-        }
-
-        private void Print()
-        {
-            for (int row = 0; row < maze.Rows; ++row)
-            {
-                PrintRowSeparator(row);
-                PrintRow(row);
-            }
-            PrintMazeBottom();
-        }
-
-
-        private static char[] CornerChars =
-        {
+    public class UnicodeCharSet : ICharSet
+    {
+        private static char[] unicodeCorners = new char[] {
             ' ',
             '╹',
             '╺',
@@ -56,6 +29,107 @@ namespace Mazey
             '┳',
             '╋'
         };
+
+        private static string[] unicodeSolutions = new[] {
+            "   ",
+            "   ",
+            "   ",
+            " ╰┄",
+            "   ",
+            " ┆ ",
+            " ╭┄",
+            "   ",
+            "   ",
+            "┄╯ ",
+            "┄┄┄",
+            "   ",
+            "┄╮ ",
+            "   ",
+            "   ",
+            "   "
+        };
+
+        public char[] CornerChars => unicodeCorners;
+        public string[] SolutionChars => unicodeSolutions;
+    }
+
+    public class AsciiCharSet : ICharSet
+    {
+        private static char[] asciiCornerChars => new[]
+        {
+            ' ',
+            '+',
+            '+',
+            '+',
+            '+',
+            '|',
+            '+',
+            '+',
+            '+',
+            '+',
+            '-',
+            '+',
+            '+',
+            '+',
+            '+',
+            '+'
+        };
+
+        private static string[] asciiSolutionChars => new[] {
+            "   ",
+            "   ",
+            "   ",
+            "XXX",
+            "   ",
+            "XXX",
+            "XXX",
+            "   ",
+            "   ",
+            "XXX",
+            "XXX",
+            "   ",
+            "XXX",
+            "   ",
+            "   ",
+            "   "
+        };
+
+        public char[] CornerChars => asciiCornerChars;
+        public string[] SolutionChars => asciiSolutionChars;
+    }
+
+    public class MazePrinter
+    {
+        TextWriter output;
+        Maze maze;
+        Func<Cell, bool> isSolutionCell;
+        ICharSet charSet;
+
+        public MazePrinter(TextWriter output, ICharSet charSet, Maze maze, Func<Cell, bool> isSolutionCell)
+        {
+            this.output = output;
+            this.charSet = charSet;
+            this.maze = maze;
+            this.isSolutionCell = isSolutionCell;
+        }
+
+        public void Print()
+        {
+            for (int row = 0; row < maze.Rows; ++row)
+            {
+                PrintRowSeparator(row);
+                PrintRow(row);
+            }
+            PrintMazeBottom();
+        }
+
+        private char[] CornerChars => charSet.CornerChars;
+        private string[] SolutionChars => charSet.SolutionChars;
+
+        private string HorizontalBar
+        {
+            get { return $"{CornerChars[10]}{CornerChars[10]}{CornerChars[10]}"; }
+        }
 
         private char CornerChar(Cell cell)
         {
@@ -84,18 +158,25 @@ namespace Mazey
                 output.Write(CornerChar(cell));
                 if (cell.CanGo(Direction.Up))
                 {
-                    output.Write("   ");
+                    if (isSolutionCell(cell) && isSolutionCell(cell.Go(Direction.Up)))
+                    {
+                        output.Write(SolutionChars[5]);
+                    }
+                    else
+                    {
+                        output.Write("   ");
+                    }
                 }
                 else
                 {
-                    output.Write("━━━");
+                    output.Write(HorizontalBar);
                 }
             }
-            PrintRowSeparatorEnd(output, maze, row);
+            PrintRowSeparatorEnd(row);
             output.Write("\n");
         }
 
-        private static void PrintRowSeparatorEnd(TextWriter output, Maze maze, int row)
+        private void PrintRowSeparatorEnd(int row)
         {
             var cell = maze.GetCell(row, maze.Cols - 1);
             int index = 0;
@@ -116,31 +197,45 @@ namespace Mazey
             {
                 if (cell.CanGo(Direction.Left))
                 {
-                    output.Write(" ");
+                    if (isSolutionCell(cell) && (cell.IsEntrance || isSolutionCell(cell.Go(Direction.Left))))
+                    {
+                        output.Write(SolutionChars[10][1]);
+                    }
+                    else
+                    {
+                        output.Write(" ");
+                    }
                 }
                 else
                 {
-                    output.Write("\u2503");
+                    output.Write(CornerChars[5]);
                 }
-                if (isSolutionCell(cell))
-                {
-                    output.Write("XXX");
-                }
-                else
-                {
-                    output.Write("   ");
-                }
+                output.Write(CellContents(cell));
             }
 
             if (maze.Exit.Row == row)
             {
-                output.Write(" ");
+                output.Write(SolutionChars[10][1]);
             }
             else
             {
-                output.Write("\u2503");
+                output.Write(CornerChars[5]);
             }
             output.Write("\n");
+        }
+
+        private string CellContents(Cell cell)
+        {
+            if (!isSolutionCell(cell))
+            {
+                return "   ";
+            }
+            int index = 0;
+            index |= cell.CanGo(Direction.Up) && isSolutionCell(cell.Go(Direction.Up)) ? 1 : 0;
+            index |= cell.CanGo(Direction.Right) && (cell.IsExit || isSolutionCell(cell.Go(Direction.Right))) ? 2 : 0;
+            index |= cell.CanGo(Direction.Down) && isSolutionCell(cell.Go(Direction.Down)) ? 4 : 0;
+            index |= cell.CanGo(Direction.Left) && (cell.IsEntrance || isSolutionCell(cell.Go(Direction.Left))) ? 8 : 0;
+            return SolutionChars[index];
         }
 
         private void PrintMazeBottom()
@@ -161,7 +256,7 @@ namespace Mazey
                 index &= 0x7;
             }
             output.Write(CornerChars[index]);
-            output.Write("━━━");
+            output.Write(HorizontalBar);
         }
 
         private void PrintBottomRightChar()
@@ -172,3 +267,4 @@ namespace Mazey
         }
     }
 }
+
