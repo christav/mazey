@@ -215,7 +215,14 @@ namespace Mazey
 
             if (maze.Exit.Row == row)
             {
-                output.Write(SolutionChars[10][1]);
+                if (isSolutionCell(maze.Exit))
+                {
+                    output.Write(SolutionChars[10][1]);
+                }
+                else
+                {
+                    output.Write(" ");
+                }
             }
             else
             {
