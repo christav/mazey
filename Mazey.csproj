@@ -46,6 +46,7 @@
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Maze.cs" />
     <Compile Include="MazeMaker.cs" />
+    <Compile Include="MazePrinter.cs" />
     <Compile Include="MazeSolver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
