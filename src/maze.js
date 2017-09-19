@@ -144,6 +144,10 @@ class Maze {
   rows() {
     return this.cells;
   }
+
+  row(rowNum) {
+    return this.cells[rowNum];
+  }
 }
 
 Object.assign(exports, { directions, oppositeDirection, allDirections, Cell, Maze });
