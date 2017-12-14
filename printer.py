@@ -5,7 +5,7 @@ from directions import Directions
 from solver import is_solution_cell
 
 class CharSet:
-    def __init__(self, corners, solution_chars): 
+    def __init__(self, corners, solution_chars):
         self.corners = corners
         self.solution_chars = solution_chars
 
@@ -13,20 +13,20 @@ class CharSet:
 unicode_char_set = CharSet(
     corners = " ╹╺┗╻┃┏┣╸┛━┻┓┫┳╋",
     solution_chars = [
-        "   ", "   ", "   ", " ╰┄", 
+        "   ", "   ", "   ", " ╰┄",
         "   ", " ┆ ", " ╭┄", "   ",
         "   ", "┄╯ ", "┄┄┄", "   ",
-        "┄╮ ", "   ", "   ", "   "    
+        "┄╮ ", "   ", "   ", "   "
     ]
 )
 
 ascii_char_set = CharSet(
     corners = " ++++|++++-+++++",
     solution_chars = [
-        "   ", "   ", "   ", "XXX",
-        "   ", "XXX", "XXX", "   ",
-        "   ", "XXX", "XXX", "   ",
-        "XXX", "   ", "   ", "   "    
+        "   ", "   ", "   ", " XX",
+        "   ", " X ", "XXX", "   ",
+        "   ", "XX ", "XXX", "   ",
+        "XX ", "   ", "   ", "   "
     ]
 )
 
@@ -69,7 +69,7 @@ class MazePrinter:
                     self.out.write(" ")
             else:
                 self.out.write(self.char_set.corners[5])
-            
+
             self.out.write(self.cell_contents(cell))
 
         lastCell = row[-1]
@@ -88,7 +88,7 @@ class MazePrinter:
             index = 0xa | (0 if cell.can_go(Directions.LEFT) else 1)
             if cell.col == 0:
                 index &= 0x7
-            
+
             self.out.write(self.char_set.corners[index])
             self.out.write(self.horizontal_bar)
 
@@ -108,7 +108,7 @@ class MazePrinter:
 
         if cell.row == 0:
             index &= 0xe
-        
+
         if cell.col == 0:
             index &= 0x7
 
@@ -124,7 +124,7 @@ class MazePrinter:
 
         if cell.row == 0:
             index &= 0xe
-        
+
         return self.char_set.corners[index]
 
     def cell_contents(self, cell):
