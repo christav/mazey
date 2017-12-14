@@ -24,7 +24,7 @@ ascii_char_set = CharSet(
     corners = " ++++|++++-+++++",
     solution_chars = [
         "   ", "   ", "   ", " XX",
-        "   ", " X ", "XXX", "   ",
+        "   ", " X ", " XX", "   ",
         "   ", "XX ", "XXX", "   ",
         "XX ", "   ", "   ", "   "
     ]
