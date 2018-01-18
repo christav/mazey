@@ -10,6 +10,7 @@ package com.tavaresstudios;
 public interface SolutionCellPredicate {
     /**
      * Check if the given cell is part of the solution path.
+     *
      * @param cell cell to check
      * @return true if part of solution, false if not.
      */

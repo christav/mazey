@@ -4,31 +4,66 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class Maze {
+    private final int rows;
+    private final int cols;
     // Our set of cells - each cell in this array is representing
     // either a wall or a cell. For the walls, 1 = a wall, 0 = no wall,
     // for the cells the value in the array is the value of the mark for
     // that cell.
     private int[][] cells;
 
-    private final int rows;
-    private final int cols;
-
     public Maze(int rows, int cols) {
         cells = new int[rows * 2 + 1][cols * 2 + 1];
-        for(int r = 0; r < rows * 2 + 1; ++r) {
-            for(int c = 0; c < cols * 2 + 1; ++c) {
+        for (int r = 0; r < rows * 2 + 1; ++r) {
+            for (int c = 0; c < cols * 2 + 1; ++c) {
                 cells[r][c] = 1;
             }
         }
 
         for (int r = 0; r < rows; ++r) {
             for (int c = 0; c < cols; ++c) {
-                getCell(r,c).setMark(0);
+                getCell(r, c).setMark(0);
             }
         }
 
         this.rows = rows;
         this.cols = cols;
+    }
+
+    private static int rowOffset(int row, Direction direction) {
+        switch (direction) {
+            case NONE:
+            case LEFT:
+            case RIGHT:
+                return row;
+
+            case UP:
+                return row - 1;
+
+            case DOWN:
+                return row + 1;
+
+            default:
+                throw new RuntimeException("Unknown direction");
+        }
+    }
+
+    private static int colOffset(int col, Direction direction) {
+        switch (direction) {
+            case NONE:
+            case UP:
+            case DOWN:
+                return col;
+
+            case LEFT:
+                return col - 1;
+
+            case RIGHT:
+                return col + 1;
+
+            default:
+                throw new RuntimeException("Unknown direction");
+        }
     }
 
     public int getRows() {
@@ -40,7 +75,7 @@ public class Maze {
     }
 
     public Cell entrance() {
-        for(int row = 0; row < rows; ++row) {
+        for (int row = 0; row < rows; ++row) {
             if (canGo(row, 0, Direction.LEFT)) {
                 return getCell(row, 0);
             }
@@ -84,8 +119,7 @@ public class Maze {
         setMark(row, col, mark, Direction.NONE);
     }
 
-    private void setMark(int row, int col, int mark, Direction d)
-    {
+    private void setMark(int row, int col, int mark, Direction d) {
         cells[rowToIndex(rowOffset(row, d), Direction.NONE)][colToIndex(colOffset(col, d), Direction.NONE)] = mark;
     }
 
@@ -93,8 +127,7 @@ public class Maze {
         return getMark(row, col, Direction.NONE);
     }
 
-    private int getMark(int row, int col, Direction d)
-    {
+    private int getMark(int row, int col, Direction d) {
         return cells[rowToIndex(rowOffset(row, d), Direction.NONE)][colToIndex(colOffset(col, d), Direction.NONE)];
     }
 
@@ -113,7 +146,7 @@ public class Maze {
     //
     private int rowToIndex(int row, Direction d) {
         int y = row * 2 + 1;
-        switch(d) {
+        switch (d) {
             case NONE:
                 return y;
             case UP:
@@ -130,7 +163,7 @@ public class Maze {
 
     private int colToIndex(int col, Direction d) {
         int x = col * 2 + 1;
-        switch(d) {
+        switch (d) {
             case NONE:
                 return x;
             case UP:
@@ -143,46 +176,6 @@ public class Maze {
                 return x + 1;
         }
         throw new RuntimeException("Unknown direction");
-    }
-
-    private static int rowOffset(int row, Direction direction)
-    {
-        switch (direction)
-        {
-            case NONE:
-            case LEFT:
-            case RIGHT:
-                return row;
-
-            case UP:
-                return row - 1;
-
-            case DOWN:
-                return row + 1;
-
-            default:
-                throw new RuntimeException("Unknown direction");
-        }
-    }
-
-    private static int colOffset(int col, Direction direction)
-    {
-        switch (direction)
-        {
-            case NONE:
-            case UP:
-            case DOWN:
-                return col;
-
-            case LEFT:
-                return col - 1;
-
-            case RIGHT:
-                return col + 1;
-
-            default:
-                throw new RuntimeException("Unknown direction");
-        }
     }
 
     //
@@ -248,7 +241,7 @@ public class Maze {
         @Override
         public Collection<Cell> neighbors() {
             ArrayList<Cell> neighbors = new ArrayList<Cell>();
-            for(Direction d: Direction.getAll()) {
+            for (Direction d : Direction.getAll()) {
                 if (canGo(d) && go(d).isInMaze()) {
                     neighbors.add(go(d));
                 }

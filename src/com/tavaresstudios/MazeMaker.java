@@ -25,7 +25,7 @@ public class MazeMaker {
 
         makeMaze(maze.getCell(startRow, startCol));
 
-        for(int row = 0; row < maze.getRows(); ++row) {
+        for (int row = 0; row < maze.getRows(); ++row) {
             for (int col = 0; col < maze.getCols(); ++col) {
                 maze.getCell(row, col).setMark(0);
             }
@@ -56,7 +56,7 @@ public class MazeMaker {
     private ArrayList<Direction> availableDirections(Cell cell) {
         ArrayList<Direction> directions = new ArrayList<Direction>();
 
-        for(Direction d: Direction.getAll()) {
+        for (Direction d : Direction.getAll()) {
             if (cell.go(d).isInMaze() && cell.go(d).getMark() == 0) {
                 directions.add(d);
             }
