@@ -1,7 +1,7 @@
 package com.tavaresstudios;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MazePrinter {
@@ -27,8 +27,7 @@ public class MazePrinter {
     }
 
     private void printRowSeparator(Maze maze, int row) {
-        for (int col = 0; col < maze.getCols(); col++) {
-            Cell cell = maze.getCell(row, col);
+        for (Cell cell: maze.getRow(row)) {
             out.print(cornerChar(cell));
             if (cell.canGo(Direction.UP)) {
                 if (isSolutionCell.check(cell) && isSolutionCell.check(cell.go(Direction.UP))) {
@@ -67,9 +66,8 @@ public class MazePrinter {
     }
 
     private String cornerChar(Cell cell) {
-        List<Cell> neighbors = new ArrayList<>();
-        neighbors.add(cell.go(Direction.UP));
-        neighbors.add(cell.go(Direction.LEFT));
+        List<Cell> neighbors = Arrays.asList(cell.go(Direction.UP), cell.go(Direction.LEFT));
+
         int mask = 0;
         if (!(neighbors.get(0).isInMaze() && neighbors.get(0).canGo(Direction.LEFT))) {
             mask |= 1;
@@ -96,8 +94,7 @@ public class MazePrinter {
     }
 
     private void printRow(Maze maze, int row) {
-        for (int col = 0; col < maze.getCols(); col++) {
-            Cell cell = maze.getCell(row, col);
+        for (Cell cell: maze.getRow(row)) {
             if (cell.isEntrance()) {
                 if (isSolutionCell.check(cell)) {
                     out.print(charSet.getSolutionChar(10).charAt(1));

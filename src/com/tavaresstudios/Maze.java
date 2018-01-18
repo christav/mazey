@@ -2,6 +2,7 @@ package com.tavaresstudios;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 public class Maze {
     private final int rows;
@@ -75,18 +76,18 @@ public class Maze {
     }
 
     public Cell entrance() {
-        for (int row = 0; row < rows; ++row) {
-            if (canGo(row, 0, Direction.LEFT)) {
-                return getCell(row, 0);
+        for(Cell cell: getCol(0)) {
+            if (cell.canGo(Direction.LEFT)) {
+                return cell;
             }
         }
         throw new RuntimeException("No Entrance!");
     }
 
     public Cell exit() {
-        for (int row = 0; row < rows; ++row) {
-            if (canGo(row, cols - 1, Direction.RIGHT)) {
-                return getCell(row, cols - 1);
+        for(Cell cell: getCol(getCols() - 1)) {
+            if (cell.canGo(Direction.RIGHT)) {
+                return cell;
             }
         }
         throw new RuntimeException("No Exit!");
@@ -94,6 +95,111 @@ public class Maze {
 
     public Cell getCell(int row, int col) {
         return new MazeCell(row, col);
+    }
+
+    private class AllCellsIterable implements Iterable<Cell> {
+
+        /**
+         * Returns an iterator over elements of type {@code T}.
+         *
+         * @return an Iterator.
+         */
+        @Override
+        public Iterator<Cell> iterator() {
+            final int numRows = getRows();
+            final int numCols = getCols();
+            final int numCells = numRows * numCols;
+            return new Iterator<>() {
+                int cellNum = -1;
+
+                @Override
+                public boolean hasNext() {
+                    return cellNum < numCells - 1;
+                }
+
+                @Override
+                public Cell next() {
+                    ++cellNum;
+                    int row = cellNum / numCols;
+                    int col = cellNum % numCols;
+                    return getCell(row, col);
+                }
+            };
+        }
+    }
+
+    public Iterable<Cell> getAllCells() {
+        return this.new AllCellsIterable();
+    }
+
+    private class RowIterable implements Iterable<Cell> {
+        private final int row;
+
+        RowIterable(int row) {
+            this.row = row;
+        }
+        /**
+         * Returns an iterator over elements of type {@code T}.
+         *
+         * @return an Iterator.
+         */
+        @Override
+        public Iterator<Cell> iterator() {
+            final int numCols = getCols();
+            return new Iterator<>() {
+                int col = -1;
+
+                @Override
+                public boolean hasNext() {
+                    return col < numCols - 1;
+                }
+
+                @Override
+                public Cell next() {
+                    ++col;
+                    return getCell(row, col);
+                }
+            };
+        }
+    }
+
+    public Iterable<Cell> getRow(int row) {
+        return this.new RowIterable(row);
+    }
+
+    private class ColumnIterable implements Iterable<Cell> {
+        private final int col;
+
+        ColumnIterable(int col) {
+            this.col = col;
+        }
+        /**
+         * Returns an iterator over elements of type {@code T}.
+         *
+         * @return an Iterator.
+         */
+        @Override
+        public Iterator<Cell> iterator() {
+            final int numRows = getRows();
+            return new Iterator<>() {
+                int row = -1;
+
+                @Override
+                public boolean hasNext() {
+                    return row < numRows - 1;
+                }
+
+                @Override
+                public Cell next() {
+                    ++row;
+                    return getCell(row, col);
+                }
+            };
+        }
+    }
+
+    public Iterable<Cell> getCol(int col) {
+        return this.new ColumnIterable(col);
     }
 
     private Boolean canGo(int row, int col, Direction d) {

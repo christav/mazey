@@ -7,6 +7,7 @@ public class UnicodeCharSet implements CharSet {
     };
 
     private static final String[] solutionChars = {
+            "   ", "   ", "   ", " ╰┄",
             "   ", " ┆ ", " ╭┄", "   ",
             "   ", "┄╯ ", "┄┄┄", "   ",
             "┄╮ ", "   ", "   ", "   "
